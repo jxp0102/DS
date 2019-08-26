@@ -1,0 +1,113 @@
+#include<iostream>
+using namespace std;
+class Node
+{
+public:
+	Node(char v) :m_value(v), m_left(NULL), m_right(NULL){}
+	char m_value;
+	Node *m_left;
+	Node *m_right;
+};
+class Tree
+{
+public:
+	Tree(char c):m_flag(c),m_root(NULL){}
+	Node *create(char *&str);
+	Node *FindNode(Node *root, char c);
+	Node *FindParent(Node *root, char c);
+	int Height(Node *root);
+	int Size(Node *root);
+	void PreOrder(Node* root);
+	char m_flag;
+	Node *m_root;
+};
+Node *Tree::create(char *&str)
+{
+	if(*str == m_flag)
+	return NULL;
+	else
+	{
+		Node *p = new Node(*str);
+		p->m_left = create(++str);
+		p->m_right = create(++str);
+		return p;
+	}
+}
+//查找任意一个结点
+Node *Tree::FindNode(Node *root,char c)
+{
+	if (root == NULL || root->m_value == c)
+		return NULL;
+	Node *p = FindNode(root->m_left, c);
+	if (p != NULL)
+		return p;
+	return FindNode(root->m_right, c);
+}
+Node* Tree::FindParent(Node *root,char c)
+{
+	if (root == NULL || root->m_value == c)
+		return NULL;
+	if (root->m_left&&root->m_left->m_value || root->m_right&&root->m_right->m_value)
+		return root;
+	Node *p = FindParent(root->m_left, c);
+	if (p != NULL)
+		return p;
+	return FindParent(root->m_right, c);
+}
+int Tree::Height(Node* root)
+{
+	if (root == NULL)
+		return 0;
+	else
+	{
+		int hl = Height(root->m_left);
+		int hr = Height(root->m_right);
+		return hl > hr ? (hl + 1) : (hr + 1);
+	}
+}
+int Tree::Size(Node* root)
+{
+
+	if (root == NULL)
+		return 0;
+	else
+	{
+		return Size(root->m_left) + Size(root->m_right) + 1;
+	}
+}
+void Tree::PreOrder(Node* root)
+{
+	if (root)
+	{
+		cout << root->m_value << " ";
+		PreOrder(root->m_left);
+		PreOrder(root->m_right);
+	}
+}
+void main()
+{
+	Tree t('#');//构造函数定义对象，并给定参数
+	char *str = "abd##e##cf#g#h###";
+	t.m_root = t.create(str);
+	t.PreOrder(t.m_root);
+	cout << endl;
+	cout << "Height=" << t.Height(t.m_root) << endl;
+	cout << "Size=" << t.Size(t.m_root) << endl;
+	Node* p = NULL;
+	if (p = t.FindParent(t.m_root, 'g'))
+	{
+		cout << "parent=" << p->m_value << endl;
+	}
+	else
+	{
+		cout << "no find" << endl;
+	}
+	if (p = t.FindNode(t.m_root, 'g'))
+	{
+		cout << p->m_value << endl;
+	}
+	else
+	{
+		cout << "no find" << endl;
+	}
+}

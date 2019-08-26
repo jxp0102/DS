@@ -1,0 +1,174 @@
+#include<iostream>
+using namespace std;
+class Node
+{
+public:
+	Node(int v=0):m_value(v),m_next(NULL){}
+	int m_value;
+	Node *m_next;
+};
+class List
+{
+public:
+	List():m_pHead(NULL),m_pTail(NULL),m_size(0){}
+	~List(){}
+	void InsertHead(int v);
+	void InsertTail(int v);
+	void InsertIvalue(int i, int v);
+	void DeleteHead();
+	void DeleteTail();
+	void DeleteIvalue(int i);
+	Node *GetIAdd(int i);
+	Node *GetHead();
+	int Size()const;
+	bool IsEmpty()const
+	{
+		return m_pHead == NULL ? true : false;
+	}
+	void Sort();
+	void Reserve();
+	void Print();
+	void Destroy();
+private:
+	int m_size;
+	Node *m_pHead;
+	Node *m_pTail;
+};
+void List::InsertHead(int v)
+{
+	Node *p = new Node(v);
+	if (m_pHead == NULL)
+	{
+		m_pHead = m_pTail = p;
+	}
+	else
+	{
+		p->m_next = m_pHead;
+		m_pHead = p;
+	}
+	m_size++;
+}
+void List::InsertTail(int v)
+{
+	Node *p = new Node(v);
+	if (m_pHead == NULL)
+	{
+		m_pHead = m_pTail = p;
+	}
+	else
+	{
+		m_pTail->m_next = p;
+		m_pTail = p;
+	}
+	m_size++;
+}
+void List::InsertIvalue(int i, int value)
+{
+	if (i<0 || i>m_size + 1)
+		return;
+	if (i == 1)
+		InsertHead(value);
+	else
+	{
+		Node *p = GetIAdd(i - 1);
+		Node *pnew = new Node(value);
+		pnew->m_next = p->m_next;
+		p->m_next = pnew;
+		m_size++;
+	}
+}
+void List::DeleteHead()
+{
+	if (IsEmpty())
+		return;
+	if (m_pHead->m_next == NULL)
+	{
+		delete m_pHead;
+		m_pHead = m_pTail = NULL;
+	}
+	else
+	{
+		Node *p = m_pHead;
+		m_pHead = m_pHead->m_next;
+		delete p;
+		p = NULL;
+	}
+	m_size--;
+}
+void List::DeleteTail()
+{
+	if (IsEmpty())
+		return;
+	if (m_pHead->m_next == NULL)
+	{
+		delete m_pHead;
+		m_pHead = m_pTail = NULL;
+	}
+	else
+	{
+		Node *pf = GetIAdd(m_size - 1);
+		pf->m_next = NULL;
+		delete m_pTail;
+		m_pTail = pf;
+	}
+	m_size--;
+}
+Node *List::GetIAdd(int i)
+{
+	if (i<0 || i>m_size)
+		return NULL;
+	Node *p = m_pHead;
+	int k = 1;
+	while (k < i)
+	{
+		p = p -> m_next;
+		k++;
+	}
+	return p;
+}
+void List::Print()
+{
+	Node *p = m_pHead;
+	while (p)
+	{
+		cout << p->m_value << " ";
+		p = p->m_next;
+	}
+	cout << endl;
+}
+void main()
+{
+	List l;
+	l.DeleteTail();
+	l.DeleteHead();
+	l.InsertTail(6);
+	l.DeleteHead();
+	l.InsertHead(1);
+	l.DeleteTail();
+	l.InsertHead(2);
+	l.InsertHead(3);
+	l.DeleteTail();
+	l.DeleteHead();
+	l.Print();
+	l.InsertTail(4);
+	l.InsertHead(5);
+	l.Print();
+	Node *p = NULL;
+	if (p = l.GetIAdd(6))
+		cout << p->m_value << endl;
+	l.InsertIvalue(1, 10);
+	l.Print();
+	l.InsertIvalue(8, 11);
+	l.Print();
+	l.InsertIvalue(3, 12);
+	l.Print();
+	l.InsertIvalue(2, 20);
+	l.Print();
+	l.InsertIvalue(10, 21);
+	l.Print();
+	l.InsertIvalue(12, 30);
+	l.Print();
+	l.DeleteHead();
+	l.DeleteTail();
+	l.Print();
+}

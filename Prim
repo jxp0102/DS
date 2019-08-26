@@ -1,0 +1,177 @@
+最小生成树：普里姆算法
+#include<iostream>
+using namespace std;
+#define INIC 10
+#define MAX_COST 65535
+class Graph
+{
+public:
+	Graph();
+	~Graph();
+	void InsertVertex(char v);
+	void InsertEdge(char v1, char v2,int cost);
+	void ShowGraph();
+	int GetVertexIndex(char v);
+	void Mst(char v);
+	int GetEdge()const
+	{
+		return EdgeNum;
+	}
+	int GetVertex()const
+	{
+		return VertexNum;
+	}
+private:
+	int MaxVertex;
+	int EdgeNum;
+	int VertexNum;
+	char *Vertex;
+	int **Edge;
+};
+Graph::Graph()
+{
+	MaxVertex = INIC;
+	VertexNum = EdgeNum = 0;
+	Vertex = new char[MaxVertex];
+	Edge = new int *[MaxVertex];
+	for (int i = 0; i < MaxVertex; i++)
+		Edge[i] = new int[MaxVertex];
+	for (int i = 0; i < MaxVertex; i++)
+	{
+		for (int j = 0; j < MaxVertex; j++)
+		{
+			if (i == j)
+				Edge[i][j] = 0;
+			else
+				Edge[i][j] = MAX_COST;
+		}
+	}
+}
+Graph::~Graph()
+{
+	if (Vertex)
+		delete[]Vertex;
+	Vertex = NULL;
+	for (int i = 0; i < VertexNum; i++)
+	{
+		delete[]Edge[i];
+		Edge[i] = NULL;
+	}
+	if (Edge)
+	{
+		delete[]Edge;
+		Edge = NULL;
+	}
+	VertexNum = EdgeNum = 0;
+}
+void Graph::InsertVertex(char v)
+{
+	if (VertexNum > MaxVertex)
+		return;
+	Vertex[VertexNum++] = v;
+}
+void Graph::InsertEdge(char v1, char v2, int cost)
+{
+	int p1 = GetVertexIndex(v1);
+	int p2 = GetVertexIndex(v2);
+	if (p1 == -1 || p2 == -1)
+		return;
+	Edge[p1][p2] = Edge[p2][p1] = cost;
+	EdgeNum++;
+}
+int Graph::GetVertexIndex(char v)
+{
+	for (int i = 0; i < VertexNum; i++)
+	{
+		if (Vertex[i] == v)
+			return i;
+	}
+	return -1;
+}
+void Graph::ShowGraph()
+{
+	cout << "  ";
+	for (int i = 0; i < VertexNum; i++) 
+		cout << Vertex[i] << " ";
+	cout << endl;
+	for (int i = 0; i < VertexNum; i++)
+	{
+		cout << Vertex[i] << " ";
+		for (int j = 0; j < VertexNum; j++)
+		{
+			if (Edge[i][j] == MAX_COST)
+				cout << "*" << " ";
+			else
+				cout << Edge[i][j] << " ";
+		}
+			cout << endl;
+	}
+
+}
+void Graph::Mst(char v)
+{
+	int lowcost[6];
+	int mst[6];
+	int p = GetVertexIndex(v);
+	if (p == -1)
+		return;
+	int i, j;
+	//lowcost表示从顶点v到所有接点的权值
+	//mst[i]=j表示从j到i
+	for (i = 0; i < VertexNum; i++)
+	{
+		lowcost[i] = Edge[p][i];
+		mst[i] = p;
+	}
+	int min_index;
+	int min;
+	int begin, end;
+	for (i = 0; i < VertexNum - 1; i++)
+	{
+		min = MAX_COST;
+		for (int j = 0; j < VertexNum; j++)
+		{
+			if (lowcost[j] != 0 && min > lowcost[j])
+			{
+				min = lowcost[j];
+				min_index = j;
+			}
+		}
+		begin = mst[min_index];
+		end = min_index;
+		cout << Vertex[begin] << "->" << Vertex[end] << ":" << min << endl;
+		lowcost[min_index] = 0;
+		//更新数组
+		for (j = 0; j < VertexNum; j++)
+		{
+			int cost = Edge[min_index][j];
+			if (cost < lowcost[j])
+			{
+				lowcost[j] = cost;
+				mst[j] = min_index;
+			}
+		}
+	}
+}
+void main()
+{
+	Graph g;
+	g.InsertVertex('a');
+	g.InsertVertex('b');
+	g.InsertVertex('c');
+	g.InsertVertex('d');
+	g.InsertVertex('e');
+	g.InsertVertex('f');
+	g.InsertEdge('a', 'b', 6);
+	g.InsertEdge('a', 'c', 1);
+	g.InsertEdge('a', 'd', 5);
+	g.InsertEdge('b', 'c', 5);
+	g.InsertEdge('b', 'e', 3);
+	g.InsertEdge('c', 'd', 5);
+	g.InsertEdge('c', 'e', 6);
+	g.InsertEdge('c', 'f', 4);
+	g.InsertEdge('d', 'f', 2);
+	g.InsertEdge('e', 'f', 2);
+	g.ShowGraph();
+	g.Mst('a');
+}*/

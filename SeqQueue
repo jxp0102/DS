@@ -1,0 +1,82 @@
+#include<iostream>
+using namespace std;
+#define INIC 10
+class SeqQueue
+{
+public:
+	SeqQueue();
+	~SeqQueue();
+	void EnterQueue(int v);
+	void OutQueue();
+	void Print();
+	int Size() { return m_tail - m_head; }
+	bool GetHead(int *value);
+	bool IsEmpty() { return m_head == m_tail ? true : false;}
+	bool IsFull() { return m_tail >= m_capacity ? true : false; }
+private:
+	int *m_data;
+	int m_capacity;
+	int m_head;
+	int m_tail;
+};
+SeqQueue::SeqQueue()
+{
+	m_capacity =INIC;
+	m_data = new int[m_capacity];
+	m_head = m_tail = 0;
+}
+SeqQueue::~SeqQueue()
+{
+	if (m_data)
+		delete[]m_data;
+	m_data = NULL;
+}
+void SeqQueue::EnterQueue(int v)//入队，是从队尾入
+{
+	if (IsFull())
+	{
+		cout << "队已满，不能入队" << endl;
+		return;
+	}
+	m_data[m_tail++] = v;
+}
+void SeqQueue::OutQueue()//出队，从队头出
+{
+	if (IsEmpty())
+	{
+		cout << "队为空，不能入栈" << endl;
+		return;
+	}
+	m_head++;
+}
+bool SeqQueue::GetHead(int *value)
+{
+	if (IsEmpty())
+	{
+		cout << "队为空，没有队头" << endl;
+		return false;
+	}
+	*value = m_data[m_head];
+	return true;
+}
+void SeqQueue::Print()
+{
+	for (int i = m_head; i < m_tail; i++)
+		cout << m_data[i] << " ";
+	cout << endl;
+}
+void main()
+{
+	SeqQueue sq;
+	int value;
+	sq.EnterQueue(1);
+	sq.Print();
+	sq.EnterQueue(5);
+	sq.EnterQueue(7);
+	sq.Print();
+	sq.OutQueue();
+	sq.Print();
+	cout << sq.Size() << endl;
+	if(sq.GetHead(&value))
+	cout << value<< endl;
+}

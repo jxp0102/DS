@@ -1,0 +1,176 @@
+#include<iostream>
+using namespace std;
+#define INIC 10
+#include<stack>
+class Edge
+{
+public:
+	Edge(int v = 0) :index(0), next(NULL) {}
+	int index;
+	Edge *next;
+};
+class Vertex
+{
+public:
+	Vertex():list(NULL){}
+	char value;
+	Edge *list;
+};
+
+class LinkGraph
+{
+public:
+	LinkGraph();
+	~LinkGraph(){}
+	void InsertVertex(char v);
+	void InsertEdge(char v1,char v2);
+	void ShowGraph();
+	void TopologicalSort();
+	int GetVertexIndex(char v);
+	int GetFirstNeighbor(char v);
+	int GetNextNeighbor(char v, char w);
+private:
+	int MaxVertex;
+	int VertexNum;
+	int EdgeNum;
+	Vertex *VertexTable;
+};
+LinkGraph::LinkGraph()
+{
+	MaxVertex = INIC;
+	VertexNum = EdgeNum = 0;
+	VertexTable = new Vertex[MaxVertex];
+}
+void LinkGraph::InsertVertex(char v)
+{
+	if (VertexNum > MaxVertex)
+		return;
+	VertexTable[VertexNum++].value = v;
+
+}
+void LinkGraph::InsertEdge(char v1, char v2)
+{
+	int p1 = GetVertexIndex(v1);
+	int p2 = GetVertexIndex(v2);
+	if (p1 == -1 || p2 == -1)
+		return;
+	//v1->v2
+	Edge *ed = new Edge(p2);
+	ed->next = VertexTable[p1].list;
+	VertexTable[p1].list = ed;
+	EdgeNum++;
+}
+int LinkGraph::GetVertexIndex(char v)
+{
+	for (int i = 0; i < VertexNum; i++)
+	{
+		if (VertexTable[i].value == v)
+			return i;
+	}
+	return -1;
+}
+void LinkGraph::ShowGraph()
+{
+	int i;
+	Edge *p = NULL;
+	for (i = 0; i < VertexNum; i++)
+	{
+		cout << VertexTable[i].value << "->";
+		p = VertexTable[i].list;
+		while (p)
+		{
+			cout << p->index << "->";
+			p = p->next;
+		}
+		cout << "nul" << endl;
+	}
+}
+int LinkGraph::GetFirstNeighbor(char v)
+{
+	int p = GetVertexIndex(v);
+	if (p == -1)
+		return -1;
+	Edge *ed = VertexTable[p].list;
+	if (ed != NULL)
+		return ed->index;
+	else
+		return -1;
+}
+int LinkGraph::GetNextNeighbor(char v, char w)
+{
+	int p1 = GetVertexIndex(v);
+	int p2 = GetVertexIndex(w);
+	if (p1 == -1 || p2 == -1)
+		return -1;
+	Edge *ed = VertexTable[p1].list;
+	while (ed != NULL&&ed->index != p2)
+		ed = ed->next;
+	if (ed == NULL || ed->next == NULL)
+		return -1;
+	else
+		return ed->next->index;
+}
+void LinkGraph::TopologicalSort()
+{
+	int *count = new int[VertexNum];
+	for (int i = 0; i < VertexNum; i++)
+		count[i] = 0;
+	Edge *p;
+	for (int i = 0; i < VertexNum; i++)
+	{
+		Edge *p = VertexTable[i].list;
+		while (p != NULL)
+		{
+			count[p->index]++;
+			p = p->next  ;
+		}
+	}
+	for (int i = 0; i < VertexNum; i++)
+		cout << count[i] << endl;
+	stack<int> ss;
+	for (int i = 0; i < VertexNum; i++)
+	{
+		if (count[i] == 0)
+			ss.push(i);
+	}
+	for (int i = 0; i < VertexNum; i++)
+	{
+		if (ss.empty())
+		{
+			cout << "有回路" << endl;
+			break;
+		}
+		else
+		{
+			int v = ss.top();
+			ss.pop();
+			cout << VertexTable[v].value << endl;
+			int w = GetFirstNeighbor(VertexTable[v].value);
+			while (w != -1)
+			{
+				count[w]--;
+				if (count[w] == 0)
+				{
+					ss.push(w);
+				}
+				w = GetNextNeighbor(VertexTable[v].value, VertexTable[w].value);
+			}
+		}
+	}
+}
+void main()
+{
+	LinkGraph lg;
+	lg.InsertVertex('a');
+	lg.InsertVertex('b'); 
+	lg.InsertVertex('c');
+	lg.InsertVertex('d');
+	lg.ShowGraph();
+	lg.InsertEdge('a', 'd');
+	lg.InsertEdge('b', 'a');
+	lg.InsertEdge('c', 'a');
+	lg.InsertEdge('c', 'b');
+	lg.InsertEdge('c', 'd');
+	lg.ShowGraph();
+	lg.TopologicalSort();
+}

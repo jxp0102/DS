@@ -1,0 +1,76 @@
+#include<iostream>
+using namespace std;
+#define INIC 10
+class SeqStack
+{
+public:
+	SeqStack();
+	~SeqStack();
+	void Push(int v);
+	void Pop();
+	void Print();
+	bool Gettop(int *value);
+	int Size()const
+	{
+		return m_top;
+	}
+	bool IsEmpty()const { return m_top == 0 ? true : false; }
+	bool IsFull()const { return m_top == m_capacity ? true : false; }
+private:
+	int *m_data;
+	int m_capacity;
+	int m_top;
+};
+SeqStack::SeqStack()
+{
+	m_capacity = INIC;
+	m_data = new int[m_capacity];
+	m_top = 0;
+}
+SeqStack::~SeqStack()
+{
+	if (m_data)
+		delete[]m_data;
+	m_data = NULL;
+}
+void SeqStack::Push(int v)
+{
+	if (IsFull())
+	{
+		cout << "栈已满，不能入栈" << endl;
+		return;
+	}
+	m_data[m_top++] = v;
+}
+void SeqStack::Pop()
+{
+	if (IsEmpty())
+	{
+		cout << "栈已空，不能出栈" << endl;
+		return;
+	}
+	m_top--;
+}
+void SeqStack::Print()
+{
+	
+	if (IsEmpty())
+	{
+		cout << "栈为空，不能打印" << endl;
+		return;
+	}
+	for (int i = m_top-1; i>=0; i--)//不能从0开始输出，栈是从栈顶先出的
+		cout << m_data[i] << " ";
+	cout << endl;
+}
+bool SeqStack::Gettop(int *value)
+{
+	if (IsEmpty())
+	{
+		cout << "栈为空，没有栈顶元素" << endl;
+		return false;
+	}
+	*value = m_data[m_top - 1];
+	cout << *value << endl;
+	return true;
+}

@@ -1,0 +1,159 @@
+#include<iostream>
+using namespace std;
+#define INIC 10
+class Graph
+{
+public:
+	Graph();
+	~Graph();
+	void InsertVertex(char v);//插入图顶点
+	void InsertEdge(char v1,char v2);//插入边
+	void ShowGraph();//显示
+	int GetVertexIndex(char v);//获得顶点的下标
+	void DeleteVertex(char v);//删除顶点
+	void DeleteEdge(char v1,char v2);//删除边
+	int GetEdge()const//获得边的个数
+	{
+		return EdgeNum;
+	}
+	int GetVertex()const//获得顶点的个数
+	{
+		return VertexNum;
+	}
+private:
+	int MaxVertex;
+	int VertexNum;
+	int EdgeNum;
+	char *Vertex;
+	int**Edge;
+};
+Graph::Graph()
+{
+	MaxVertex = INIC;
+	VertexNum = EdgeNum = 0;
+	Vertex = new char[MaxVertex];
+	Edge = new int *[MaxVertex];
+	for (int i = 0; i < MaxVertex; i++)
+		Edge[i] = new int[MaxVertex];
+	for (int i = 0; i < MaxVertex; i++)
+	{
+		for (int j = 0; j < MaxVertex; j++)
+			Edge[i][j] = 0;
+	}
+}
+Graph::~Graph()
+{
+	if (Vertex)
+	{
+		delete[]Vertex;
+		Vertex = NULL;
+	}
+	for (int i = 0; i < MaxVertex; i++)
+	{
+		delete[]Edge[i];
+		Edge[i] = NULL;
+		if (Edge)
+		{
+			delete[]Edge;
+			Edge = NULL;
+		}
+	}
+}
+void Graph::InsertVertex(char v)
+{
+	if (VertexNum > MaxVertex)
+		return;
+	Vertex[VertexNum++] = v;
+}
+void Graph::InsertEdge(char v1, char v2)
+{
+	int p1 = GetVertexIndex(v1);
+	int p2 = GetVertexIndex(v2);
+	if (p1 == -1 || p2 == -1)
+		return;
+	Edge[p1][p2] = Edge[p2][p1] = 1;
+	EdgeNum++;
+}
+int Graph::GetVertexIndex(char v)
+{
+	for (int i = 0; i < VertexNum; i++)
+	{
+		if (Vertex[i] == v)
+			return i;
+	}
+	return -1;
+}
+void Graph::ShowGraph()
+{
+	cout << "  ";
+	for (int i = 0; i < VertexNum; i++)
+		cout << Vertex[i] << " ";
+	cout << endl;
+	for (int i = 0; i < VertexNum; i++)
+	{
+		cout << Vertex[i] << " ";
+		for (int j = 0; j < VertexNum; j++)
+			cout << Edge[i][j] << " ";
+		cout << endl;
+	}
+}
+void Graph::DeleteVertex(char v)
+{
+	int p = GetVertexIndex(v);
+	if (p == -1)
+		return;
+	int i, j;
+	int reEdge = 0;
+	for (i = 0; i < VertexNum; i++)
+	{
+		if (Edge[i][p] == 1)
+			reEdge++;
+	}
+	for ( i = 0; i < VertexNum; i++)
+	{
+		for (j = p; j < VertexNum - 1; j++)
+			Edge[i][j] = Edge[i][j + 1];
+	}
+	for (i = p; i < VertexNum - 1; i++)
+	{
+		for (j = 0; j < VertexNum-1; j++)
+			Edge[i][j] = Edge[i + 1][j];
+	}
+	for (i = p; i < VertexNum-1; i++)
+		Vertex[i] = Vertex[i + 1];
+	VertexNum--;
+	EdgeNum = EdgeNum - reEdge;
+}
+void Graph::DeleteEdge(char v1,char v2)
+{
+	int p1 = GetVertexIndex(v1);
+	int p2 = GetVertexIndex(v2);
+	if (p1 == -1 || p2 == -1 || Edge[p1][p2] == 0)
+		return;
+	Edge[p1][p2] = Edge[p2][p1] = 0;
+	EdgeNum--;
+}
+void main()
+{
+	Graph g;
+	g.InsertVertex('a');
+	g.InsertVertex('b');
+	g.InsertVertex('c');
+	g.InsertVertex('d');
+	g.InsertVertex('e');
+	g.InsertEdge('a', 'b');
+	g.InsertEdge('a', 'c');
+	g.InsertEdge('a', 'd');
+	g.InsertEdge('b', 'c');
+	g.InsertEdge('b', 'e');
+	g.InsertEdge('c', 'd');
+	g.InsertEdge('d', 'e');
+	g.ShowGraph();
+	g.DeleteEdge('b', 'c');
+	g.ShowGraph();
+	cout << g.GetEdge() << endl;
+	g.DeleteVertex('c');
+	g.ShowGraph();
+	cout << g.GetVertex() << endl;
+	cout << g.GetEdge() << endl;
+}

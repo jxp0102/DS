@@ -1,6 +1,7 @@
 #include<iostream>
 using namespace std;
 #define INIC 10
+
 class SeqStack
 {
 public:
@@ -59,7 +60,7 @@ void SeqStack::Print()
 		cout << "栈为空，不能打印" << endl;
 		return;
 	}
-	for (int i = m_top-1; i>=0; i--)//不能从0开始输出，栈是从栈顶先出的
+	for (int i = m_top-1; i>=0; i--)      //不能从0开始输出，栈是从栈顶先出的
 		cout << m_data[i] << " ";
 	cout << endl;
 }

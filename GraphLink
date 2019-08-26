@@ -1,0 +1,105 @@
+#include<iostream>
+using namespace std;
+class Edge
+{
+public:
+	Edge(int v = 0) :index(v),next(NULL){}
+	int index;
+	Edge *next;
+};
+class Vertex
+{
+public:
+	Vertex():list(NULL){}
+	char value;
+	Edge *list;
+};
+#define INIC 10
+class GraphLink
+{
+public:
+	GraphLink();
+	~GraphLink();
+	void InsertVertex(char v);
+	void InsertEdge(char v1, char v2);
+	int GetVertexindex(char v);
+	void DeleteVertex(char v);
+	void DeleteEdge(char v1, char v2);
+	void ShowGraph();
+private:
+	int MaxVertex;
+	int NumVertex;
+	int NumEdge;
+	Vertex *VertexTable;
+};
+GraphLink::GraphLink()
+{
+	MaxVertex = INIC;
+	NumVertex = NumEdge = 0;
+	VertexTable = new Vertex[MaxVertex];
+}
+GraphLink::~GraphLink(){}
+void GraphLink::InsertVertex(char v)
+{
+	if (NumVertex > MaxVertex)
+		return;
+	VertexTable[NumVertex++].value = v;
+}
+int GraphLink::GetVertexindex(char v)
+{
+	for (int i = 0; i < NumVertex; i++)
+	{
+		if (VertexTable[i].value == v)
+			return i;
+	}
+	return -1;
+}
+void GraphLink::InsertEdge(char v1, char v2)
+{
+	int p1 = GetVertexindex(v1);
+	int p2 = GetVertexindex(v2);
+	if (p1 == -1 || p2 == -1)
+		return;
+	//v1->v2
+	Edge *ed = new Edge(p2);
+	ed->next = VertexTable[p1].list;
+	VertexTable[p1].list = ed;
+	//v2->v1
+	ed = new Edge(p1);
+	ed->next = VertexTable[p2].list;
+	VertexTable[p2].list = ed;
+	NumEdge++;
+}
+void GraphLink::ShowGraph()
+{
+	int i;
+	Edge *p = NULL;
+	for (i = 0; i < NumVertex; i++)
+	{
+		cout << VertexTable[i].value << "->";
+		p = VertexTable[i].list;
+		while (p)
+		{
+			cout << p->index << "->";
+			p = p->next;
+		}
+		cout << "nul" << endl;
+	}
+}
+void main()
+{
+	GraphLink gl;
+	gl.InsertVertex('a');
+	gl.InsertVertex('b');
+	gl.InsertVertex('c');
+	gl.InsertVertex('d');
+	gl.InsertVertex('e');
+	gl.InsertEdge('a', 'b');
+	gl.InsertEdge('a', 'c');
+	gl.InsertEdge('a', 'd');
+	gl.InsertEdge('b', 'c');
+	gl.InsertEdge('b', 'e');
+	gl.InsertEdge('c', 'e');
+	gl.InsertEdge('d', 'e');
+	gl.ShowGraph();
+}

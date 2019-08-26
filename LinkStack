@@ -1,0 +1,80 @@
+include<iostream>
+using namespace std;
+class Node
+{
+public:
+	Node(int v) :m_value(v), m_next(NULL) {}
+	int m_value;
+	Node *m_next;
+};
+class LinkStack
+{
+public:
+	LinkStack():m_size(0),m_top(NULL){}
+	~LinkStack() { Destory(); }
+	void Push(int v);
+	void Pop();
+	Node* Gettop();
+	void Print();
+	bool IsEmpty()const { return m_top == NULL ? true : false; }
+	int Size() const{ return m_size; }
+	void Destory();
+private:
+	int m_size;
+	Node* m_top;
+};
+void LinkStack::Push(int v)
+{
+	Node *p = new Node(v);
+	p->m_next = m_top;
+	m_top = p;
+	m_size++;
+}
+void LinkStack::Pop()
+{
+	if (IsEmpty())
+	{
+		cout << "栈为空，不能出栈" << endl;
+		return;
+	}
+	Node *p = m_top;
+	m_top = m_top->m_next;
+	delete p;
+	p = NULL;
+	m_size--;
+}
+Node* LinkStack::Gettop()
+{
+	if (IsEmpty())
+	{
+		cout << "栈为空，没有栈顶元素" << endl;
+		return NULL;
+	}
+	return m_top;
+}
+void LinkStack::Print()
+{
+	Node* p = m_top;
+	while (p)
+	{
+		cout << p->m_value << " ";
+		p = p->m_next;
+	}
+	cout << endl;
+}
+void LinkStack::Destory()
+{
+	while (m_top)
+	{
+		Pop();
+	}
+}
+void main()
+{
+	LinkStack ls;
+	Node *p = NULL;
+	ls.Push(1);
+	ls.Print();
+	ls.Push(2);
+	cout <<ls.Gettop()<< endl;
+	ls.Print();

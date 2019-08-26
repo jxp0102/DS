@@ -1,0 +1,71 @@
+#include<iostream>
+using namespace std;
+class Node
+{
+public:
+	Node (char v):m_value(v),m_left(NULL),m_right(NULL){}
+	char m_value;
+	Node* m_left;
+	Node* m_right;
+};
+class Tree
+{
+public:
+	Tree():m_root(NULL){}
+	Node *create(char *&str, char c);
+	void preOrder(Node *root);
+	void InOrder(Node *root);
+	void PostOrder(Node *root);
+	Node *m_root;
+};
+Node *Tree::create(char *&str, char c)
+{
+	if (*str == c)
+		return NULL;
+	else
+	{
+		Node *p = new Node(*str);
+		p->m_left = create(++str, c);
+		p->m_right = create(++str, c);
+		return p;
+	}
+}
+void Tree::preOrder(Node *root)
+{
+	if (root)
+	{
+		cout << root->m_value << " ";
+		preOrder(root->m_left);
+		preOrder(root->m_right);
+	}
+}
+void Tree::InOrder(Node *root)
+{
+	if (root)
+	{
+		InOrder(root->m_left);
+		cout << root->m_value << " ";
+		InOrder(root->m_right);
+	}
+}
+void Tree::PostOrder(Node* root)
+{
+	if (root)
+	{
+		PostOrder(root->m_left);
+		PostOrder(root->m_right);
+		cout << root->m_value << " ";
+	}
+}
+void main()
+{
+	char *str = "abcg###d##ef#h###";
+	Tree t;
+	t.m_root = t.create(str, '#');
+	t.preOrder(t.m_root);
+	cout << endl;
+	t.InOrder(t.m_root);
+	cout << endl;
+	t.PostOrder(t.m_root);
+	cout << endl;
+}

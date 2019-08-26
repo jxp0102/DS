@@ -78,3 +78,4 @@ void main()
 	ls.Push(2);
 	cout <<ls.Gettop()<< endl;
 	ls.Print();
+}

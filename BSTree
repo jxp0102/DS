@@ -1,0 +1,151 @@
+#include<iostream>
+using namespace std;
+struct BSTNode
+{
+public:
+	BSTNode(int i = 0) :m_value(i),m_left(NULL),m_right(NULL){}
+	int m_value;
+	BSTNode *m_left;
+	BSTNode *m_right;
+};
+class BSTree
+{
+public:
+	BSTree() :m_root(NULL){}
+	~BSTree(){}
+	void InsertBSTNode(int i)
+	{
+		InsertBSTNode(m_root, i);
+	}
+	bool InsertBSTNode(BSTNode *&root, int i);
+	void Sort()
+	{
+		Sort(m_root);
+	}
+	void Sort(BSTNode *root);
+	BSTNode *GetMax();
+	BSTNode *GetMin();
+	BSTNode * Search(int i)
+	{
+		return Search(m_root, i);
+	}
+	BSTNode*Search(BSTNode *root, int i);
+	bool Remove(int i)
+	{
+		return Remove(m_root, i);
+	}
+	bool Remove(BSTNode *&root, int i);
+private:
+	BSTNode *m_root;
+};
+bool BSTree::InsertBSTNode(BSTNode *&root, int i)
+{
+	if (root == NULL)
+	{
+		root = new BSTNode(i);
+	}
+	else if (i < root->m_value)
+	{
+		InsertBSTNode(root->m_left, i);
+	}
+	else if (i > root->m_value)
+	{
+		InsertBSTNode(root->m_right, i);
+	}
+	return true;
+}
+void BSTree::Sort(BSTNode *root)
+{
+	if (root != NULL)
+	{
+		Sort(root->m_left);
+		cout << root->m_value << " ";
+		Sort(root->m_right);
+	}
+}
+BSTNode *BSTree::Search(BSTNode *root, int i)
+{
+	if (root == NULL)
+		return NULL;
+	else if (i < root->m_value)
+	{
+		return Search(root->m_left, i);
+	}
+	else if (i > root->m_value)
+	{
+		return Search(root->m_right, i);
+	}
+	return root;
+}
+bool BSTree::Remove(BSTNode *&root, int i)
+{
+	BSTNode *temp = NULL;
+	if (root != NULL)
+	{
+		if (i < root->m_value)
+			Remove(root->m_left, i);
+		else if (i > root->m_value, i)
+			Remove(root->m_right, i);
+		else if (root->m_left != NULL&&root->m_right != NULL)
+		{
+			temp = root->m_right;
+			while (temp->m_left != NULL)
+				temp = temp->m_left;
+			root->m_value = temp->m_value;
+			Remove(root->m_right, root->m_value);
+		}
+		else
+		{
+			temp = root;
+			if (root->m_left == NULL)
+				root = root->m_right;
+			else
+				root = root->m_left;
+			delete temp;
+			return true;
+		}
+	}
+}
+BSTNode *BSTree::GetMax()
+{
+	BSTNode *p = m_root;
+	if (p)
+	{
+		while (p->m_right)
+		{
+			p = p->m_right;
+		}
+		return p;
+	}
+	return NULL;
+}
+BSTNode *BSTree::GetMin()
+{
+	BSTNode *p = m_root;
+	if (p)
+	{
+		while (p->m_left)
+			p = p->m_left;
+		return p;
+	}
+	return NULL;
+}
+void main()
+{
+	int a[] = { 62,88,58,47,35,73,51,99,37,93 };
+	int n = sizeof(a) / sizeof(a[0]);
+	BSTree bs;
+	for (int i = 0; i < n; i++)
+		bs.InsertBSTNode(a[i]);
+	bs.Sort();
+	cout << endl;
+	cout << bs.GetMax()->m_value << endl;
+	cout << bs.GetMin()->m_value << endl;
+	BSTNode *p = NULL;
+	if (p = bs.Search(99))
+		cout << p->m_value << endl;
+	else
+		cout << "no" << endl;
+	bs.Remove(51);
+	bs.Sort();
+}

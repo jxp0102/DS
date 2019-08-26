@@ -1,0 +1,49 @@
+#include<iostream>
+#include<queue>
+using namespace std;
+class MyStack
+{
+public:
+	void Push(int i);
+	void Pop();
+	int Gettop();
+private:
+	queue<int> data;
+};
+void MyStack::Push(int i)
+{
+	queue<int> temp;
+	temp.push(i);
+	while (!data.empty())
+	{
+		temp.push(data.front());
+			data.pop();
+	}
+	while (!temp.empty())
+	{
+		data.push(temp.front());
+		temp.pop();
+	}
+}
+void MyStack::Pop()
+{
+	if (!data.empty())
+		data.pop();
+}
+int MyStack::Gettop()
+{
+	if (!data.empty())
+		return data.front();
+}
+void main()
+{
+	MyStack ms;
+	ms.Push(1);
+	ms.Push(2);
+	ms.Push(3);
+	cout << ms.Gettop() << endl;//3
+	ms.Pop();
+	cout << ms.Gettop() << endl;//2
+	ms.Pop();
+	cout<<ms.Gettop()<<endl;//1
+}

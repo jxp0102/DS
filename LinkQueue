@@ -1,0 +1,87 @@
+#include<iostream>
+using namespace std;
+#define INIC 10
+class Node
+{
+public:
+	Node(int v) :m_value(v),m_next(NULL){}
+	int m_value;
+	Node *m_next;
+};
+class LinkQueue
+{
+public:
+	LinkQueue();
+	~LinkQueue();
+	void Push(int v);
+	void Pop();
+	void Print();
+	int Size() { return m_size; }
+	bool IsEmpty() { return m_head ==NULL ? true : false; }
+private:
+	Node* m_head;
+	Node* m_tail;
+	int m_size;
+};
+LinkQueue::LinkQueue()
+{
+	m_head = NULL;
+	m_tail = NULL;
+	m_size = 0;
+}
+LinkQueue::~LinkQueue()
+{
+	if (m_head)
+		delete[]m_head;
+	m_head = NULL;
+}
+void LinkQueue::Push(int v)
+{
+	Node* p = new Node(v);
+	if (m_head == NULL)
+	{
+		m_head = m_tail = p;
+	}
+	else
+	{
+		m_tail->m_next = p;
+		m_tail = p;
+	}
+	m_size++;
+}
+void LinkQueue::Pop()
+{
+	if (IsEmpty())
+	{
+		cout << "队列为空，不能出队" << endl;
+		return;
+	}
+	Node* p = m_head;
+	m_head = m_head->m_next;
+	if (m_head == NULL)
+		m_tail = NULL;
+	delete p;
+	p = NULL;
+	m_size--;
+}
+void LinkQueue::Print()
+{
+	Node*p = m_head;
+	while (p)
+	{
+		cout << p->m_value << " ";
+		p = p->m_next;
+	}
+	cout << endl;
+}
+void main()
+{
+	LinkQueue lq;
+	lq.Push(1);
+	lq.Push(6);
+	lq.Push(8);
+	lq.Print();
+	cout << lq.Size() << endl;
+	lq.Pop();
+	lq.Print();
+}

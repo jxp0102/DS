@@ -1,0 +1,71 @@
+#include<iostream>
+using namespace std;
+#define INIC 10
+class CircleQueue
+{
+public:
+	CircleQueue();
+	~CircleQueue();
+	void EnterQueue(int v);
+	void OutQueue();
+	void Print();
+	int Size()const { return (m_capacity - m_head + m_tail) % m_capacity; }
+	bool IsEmpty()const { return m_head == m_tail ? true : false; }
+	bool IsFull()const { return (m_capacity - m_head + m_tail) % m_capacity == m_capacity - 1 ? true : false; }
+private:
+	int m_capacity;
+	int *m_data;
+	int m_head;
+	int m_tail;
+};
+CircleQueue::CircleQueue()
+{
+	m_capacity = INIC;
+	m_data = new int[m_capacity];
+	m_head = m_tail = 0;
+}
+CircleQueue::~CircleQueue()
+{
+	if (m_data)
+		delete[]m_data;
+	m_data = NULL;
+}
+void CircleQueue::EnterQueue(int v)
+{
+	if (IsFull())
+	{
+		cout << "队已满，不能进队" << endl;
+		return;
+	}
+	m_data[m_tail] = v;
+	m_tail = (m_tail + 1) % m_capacity;
+}
+void CircleQueue::OutQueue()
+{
+	if (IsEmpty())
+	{
+		cout << "队已空，不能出队" << endl;
+		return;
+	}
+	m_head = (m_head + 1) % m_capacity;
+}
+void CircleQueue::Print()
+{
+	for (int i = m_head; i != m_tail;)
+	{
+		cout << m_data[i] << " ";
+		i = (i + 1) % m_capacity;
+	}
+	cout << endl;
+}
+void main()
+{
+	CircleQueue cq;
+	cq.EnterQueue(1);
+	cq.EnterQueue(2);
+	cq.EnterQueue(8);
+	cq.Print();
+	cout << cq.Size() << endl;
+	cq.OutQueue();
+	cq.Print();
+}

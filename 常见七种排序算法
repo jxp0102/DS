@@ -1,0 +1,320 @@
+//1.冒泡排序（思想：每次将i与i+1比较，然后将大的放在后面，每次交换一轮会把最大的放在最后面，循环n次）
+/*
+void Bubble(int arr[], int n)
+{
+	int temp;
+	for (int i = 0; i < n - 1; i++)
+		if (arr[i] > arr[i + 1])
+		{
+			temp = arr[i];
+			arr[i] = arr[i + 1];
+			arr[i + 1] = temp;
+		}
+}
+
+void BubbleSort(int arr[], int n)
+{
+	for (int i = n ; i > 0; i--)
+		Bubble(arr, i);
+}
+
+void main()
+{
+	int arr[] = { 6,3,1,5,7,2,8,0 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	BubbleSort(arr, n);
+	for (int i = 0; i < n; i++)
+		cout << arr[i] << " ";
+	cout << endl;
+}
+*/
+
+//2.选择排序（思想：每次在当前的数组中找出最大值与最后位置进行交换）
+/*
+int FindMaxPos(int arr[], int n)
+{
+	int max = arr[0];
+	int pos=0;
+	for (int i = 0; i < n; i++)
+	{
+		if (arr[i] > max)
+		{
+			max = arr[i];
+			pos = i;
+		}
+	}
+	return pos;
+}
+
+void selectSort(int arr[], int n)
+{
+	while(n>1)
+	{
+		int pos = FindMaxPos(arr, n);
+		int temp = arr[pos];
+		arr[pos] = arr[n - 1];
+		arr[n - 1] = temp;
+		n--;
+	}
+}
+
+
+int main()
+{
+	int arr[]= { 6,3,1,5,7,2,8,0 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	selectSort(arr, n);
+	for (int i = 0; i < n; i++)
+		cout << arr[i] << " ";
+	cout << endl;
+	return 0;
+}*/
+
+//3.插入排序（思想：将后面无序的数字挨个插入到前面有序的数组中）
+/*
+void Insert(int arr[], int n)
+{
+	int key=arr[n];
+	int i = n;
+	while (arr[i - 1] > key)
+	{
+		arr[i] = arr[i - 1];
+		i--;
+		if (i == 0)
+		{
+			break;
+		}
+	}
+	arr[i] = key;
+}
+
+void InsertSort(int arr[], int n)
+{
+	for (int i = 1; i < n; i++)
+		Insert(arr, i);
+}
+
+int main()
+{
+	int arr[]= { 6,3,1,5,7,2,8,0 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	InsertSort(arr, n);
+	for (int i = 0; i < n; i++)
+		cout << arr[i] << " ";
+	cout << endl;
+	return 0;
+}*/
+
+
+//4.归并排序（思想：将两个有序的数组排序到一个数组中去）
+/*
+#include<stdio.h>
+void Merge(int arr[], int L, int M, int R)
+{
+    int LEFT_SIZE = M - L;
+	int RIGHT_SIZE= R - M + 1;
+	int left[LEFT_SIZE];
+	int right[RIGHT_SIZE];
+	int i,j,k;
+	//1.填充k数组left
+	for (int i = L; i < M; i++)
+	{
+		left[i - L] = arr[i];
+	}
+	//2.填充数组right
+	for (int i = M; i<=R; i++)
+	{
+		right[i - M] = arr[i];
+	}
+	//3.将两个数组合并
+	while (i < LEFT_SIZE&&j < RIGHT_SIZE)
+	{
+		if (arr[i] < arr[j])
+		{
+			arr[k] = arr[i];
+			i++;
+			k++;
+		}
+		else
+		{
+			arr[k] = arr[j];
+			j++;
+			k++;
+		}
+	}
+	while (i < LEFT_SIZE)
+	{
+		arr[k] = arr[i];
+		i++;
+		k++;
+	}
+	while (j < RIGHT_SIZE)
+	{
+		arr[k] = arr[j];
+		j++;
+		k++;
+	}
+}
+
+void MergeSort(int arr[], int L, int R)
+{
+	if (L == R)
+	{
+		return;
+	}
+	else
+	{
+		int M = (L + R) / 2;
+		MergeSort(arr, L, M);
+		MergeSort(arr, M + 1, R);
+		Merge(arr, L, M + 1, R);
+	}
+}
+
+int main()
+{
+	int arr[] = { 2,8,9,10,4,5,6,7 };
+	int L = 0;
+	int M = 4;
+	int R = 7;
+	MergeSort(arr, L,R);
+	for (int i = 0; i <= R; i++)
+		cout << arr[i] << " ";
+	cout << endl;
+	return 0;
+}*/
+
+//5.堆排序（思想：将数组创建成一个大根堆）
+/*
+void swap(int arr[], int i, int j)
+{
+	int temp = arr[i];
+	arr[i] = arr[j];
+	arr[j] = temp;
+}
+
+
+void heapify(int Tree[], int n, int i)  //将数组排成大根堆的形式
+{
+	if (i >= n)
+	{
+		return;
+	}
+	int c1 = 2 * i + 1;
+	int c2 = 2 * i + 2;
+	int max = i;
+	if (c1 <= n&&Tree[c1] > Tree[max])
+		max = c1;
+	if (c2 <= n&&Tree[c2] > Tree[max])
+		max = c2;
+	if (max != i)
+	{
+		swap(Tree, max, i);
+		heapify(Tree, n, max);
+	}
+}
+
+void build_heap(int Tree[], int n)//如果数组所有元素都是乱的，就从倒数第一层的父节点开始以上都进行heapify;
+{
+	int last_node = n - 1;
+	int parent = (last_node - 1) / 2;
+	for (int i = parent; i >= 0; i--)
+	{
+		heapify(Tree, n, i);
+	}
+}
+
+void heap_sort(int Tree[], int n)
+{
+	build_heap(Tree, n);
+	for (int i = n-1; i >=0; i--)
+	{
+		swap(Tree, i, 0);
+		heapify(Tree, i, 0);
+	}
+}
+
+int main()
+{
+	int Tree[] = { 7,3,9,2,8,4,1,10 };
+	int n = sizeof(Tree) / sizeof(Tree[0]);
+	heap_sort(Tree, n);
+	for (int i = 0; i < n; i++)
+		cout << Tree[i] << " ";
+	cout << endl;
+	return 0;
+}
+*/
+
+//6.希尔排序(思想：是插入排序的拓展，步长自己定义)
+/*
+void shellsort(int arr[], int n)
+{
+	int gap, i, j, temp;
+	for (gap = n / 2; gap > 0; gap /= 2)
+	{
+		for(i=gap;i<n;i++)
+			for (j = i - gap; j >= 0 && arr[j] > arr[j + gap]; j -= gap)
+			{
+				temp = arr[j];
+				arr[j] = arr[j + gap];
+				arr[j + gap] = temp;
+			}
+	}
+}
+
+int main()
+{
+	int arr[] = { 9,6,3,4,5,7 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	shellsort(arr, n);
+	for (int i = 0; i < n; i++)
+		cout << arr[i] << " ";
+	cout << endl;
+	return 0;
+}*/
+
+
+//7.快速排序（思想：选定基准元素，然后与最左最右元素开始进行比较）
+/*
+void QuickSort(int arr[],int left, int right)
+{
+	int i, j, t, temp;
+	if (left > right)
+		return;
+
+	temp = arr[left];
+	i = left;
+	j = right;
+	while (i != j)
+	{
+		//要先从右边开始找
+		while (arr[j] >= temp&&i < j)
+			j--;
+		while (arr[i] <= temp&&i < j)
+			i++;
+		if (i < j)
+		{
+			t = arr[i];
+			arr[i] = arr[j];
+			arr[j] = t;
+		}
+	}
+	arr[left] = arr[i];
+	arr[i] = temp;
+	QuickSort(arr,left, i - 1);
+	QuickSort(arr,i + 1, right);
+}
+
+int main()
+{
+	int arr[] = { 7,2,4,8,3,9,1 };
+	int n = sizeof(arr) / sizeof(arr[0]);
+	QuickSort(arr,0, n);
+	for (int i = 0; i < n; i++)
+	{
+		cout << arr[i] << " ";
+		cout << endl;
+	}
+	return 0;
+}*/

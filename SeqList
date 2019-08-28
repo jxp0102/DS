@@ -1,0 +1,127 @@
+#define INIC 100
+class SeqList
+{
+public:
+	SeqList(int sz);
+	~SeqList();
+	int Size()const
+	{
+		return maxSize;
+	}
+	int Length()const
+	{
+		return last + 1;
+	}
+	int Search(int& v)const;
+	bool GetData(int i, int &v)const
+	{
+		if (i > 0 && i <= last + 1)
+		{
+			v =m_data[i - 1];
+			return true;
+		}
+		else
+			return false;
+	}
+	void SetData(int i, int &v)
+	{
+		if (i > 0 && i <= last + 1)
+			m_data[i - 1] = v;
+	}
+	bool Insert(int i, int& v);
+	bool Remove(int i, int& v);
+	bool IsEmpty()
+	{
+		return last == -1 ? true : false;
+	}
+	bool IsFull()
+	{
+		return last == maxSize - 1 ? true : false;
+	}
+	void Print();
+private:
+	int *m_data;
+	int maxSize;
+	int last;
+};
+
+SeqList::SeqList(int sz)
+{
+	maxSize = sz;
+	last = 0;
+	m_data = new int[maxSize];
+	if (m_data == NULL)
+	{
+		cout << "分配错误" << endl;
+	}
+}
+SeqList::~SeqList()
+{
+	if (m_data != NULL)
+	{
+		delete[]m_data;
+		m_data = NULL;
+	}
+}
+int SeqList::Search(int& v)const
+{
+	for (int i = 0; i <= last; i++)
+		if (m_data[i] == v)
+			return i + 1;
+	return 0;
+}
+
+bool SeqList::Insert(int i, int &v)
+{
+	if (IsFull())
+	{
+		cout << "表满" << endl;
+		return false;
+	}
+	if (i<1 || i>last + 1)
+		return false;
+	for (int j = last; j >i; i--)
+		m_data[j + 1] = m_data[j];
+	m_data[i] = v;
+	last++;
+	return true;
+}
+
+bool SeqList::Remove(int i, int& v)
+{
+	if (IsEmpty())
+	{
+		cout << "表空" << endl;
+		return false;
+	}
+	if (i<1 || i>last + 1)
+		return false;
+	v = m_data[i - 1];
+	for (int j = last; j >= i; j--)
+		m_data[j - 1] = m_data[j];
+	last--;
+	return true;
+}
+
+void SeqList::Print()
+{
+	cout << "顺序表当前元素最后位置：" << last << endl;
+	for (int i = 1; i <= last; i++)
+	{
+		cout << "#" << i  << ":" << m_data[i] << endl;
+	}
+	cout << endl;
+}
+
+int main()
+{
+	SeqList sl(10);
+	int arr[] = { 1,2,3,4,5,6,7,8,9,10 };
+	for (int i = 1; i < 10; i++)
+		sl.Insert(i, arr[i]);
+	sl.Print();
+	cout << sl.Search(arr[4]) << endl;
+	sl.Remove(3, arr[4]);
+	sl.Print();
+	return 0;
+}
